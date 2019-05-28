@@ -75,16 +75,16 @@ workflows:
     jobs:
       - checkout_code
       - consul_test:
-        requires:
-          - checkout_code
+          requires:
+            - checkout_code
       - golang_test:
-        requires:
-          - checkout_code
+          requires:
+            - checkout_code
       - vault_test:
-        requires:
-          - checkout_code
+          requires:
+            - checkout_code
       - finalize:
-        requires:
-          - consul_test
-          - golang_test
-          - vault_test
+          requires:
+            - consul_test
+            - golang_test
+            - vault_test
