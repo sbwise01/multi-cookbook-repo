@@ -18,13 +18,10 @@ jobs:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
-          name: Get Dependencies
+          name: Get Dependencies and Run Kitchen tests
           command: |
             cd cookbooks/rblx_consul
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
-      - run:
-          name: Run Kitchen Tests
-          command: |
             bundle exec rake integration:ec2[default-ubuntu-1604]
   golang_test:
     docker:
@@ -38,9 +35,6 @@ jobs:
           command: |
             cd cookbooks/rblx_golang
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
-      - run:
-          name: Run Kitchen Tests
-          command: |
             bundle exec rake integration:ec2[default-ubuntu-1604]
   vault_test:
     docker:
@@ -54,9 +48,6 @@ jobs:
           command: |
             cd cookbooks/rblx_vault
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
-      - run:
-          name: Run Kitchen Tests
-          command: |
             bundle exec rake integration:ec2[default-ubuntu-1604] 
   finalize:
     docker:
