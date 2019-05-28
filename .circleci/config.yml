@@ -7,9 +7,9 @@ jobs:
     steps:
       - checkout
       - save_cache:
-        key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-        paths:
-          - ~/circleci-workflows
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/circleci-workflows
   consul_test:
     docker:
       - image: circleci/ruby:2.4
