@@ -8,6 +8,6 @@ metadata
 
 #cookbook 'tar'
 
-group :integration do
-  cookbook 'apt'
-end
+#group :integration do
+#  cookbook 'apt'
+#end
