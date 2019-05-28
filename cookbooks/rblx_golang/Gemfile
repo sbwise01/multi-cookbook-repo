@@ -1,0 +1,24 @@
+source 'https://rubygems.org'
+
+gem 'berkshelf'
+
+group :lint do
+  gem 'cookstyle'
+  gem 'foodcritic'
+  gem 'rubocop'
+end
+
+group :test, :integration, :unit do
+  gem 'chef-dk'
+end
+
+group :development do
+  gem 'awesome_print'
+  gem 'github_changelog_generator'
+  gem 'rake'
+  gem 'stove'
+end
+
+group :doc do
+  gem 'yard'
+end
