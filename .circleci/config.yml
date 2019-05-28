@@ -59,7 +59,7 @@ jobs:
       - run:
           name: Finished
           command: |
-            echo "All done!"
+            echo "All done with Kitchen!"
 workflows:
   version: 2
   tests:
