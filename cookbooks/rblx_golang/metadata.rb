@@ -21,7 +21,7 @@ recipe 'golang::default', 'Installs and configures Golang'
 #
 # source_url 'https://github.com/<insert_org_here>/rblx_golang'
 
-depends 'tar'
+#depends 'tar'
 
 supports 'ubuntu', '>= 14.04'
 supports 'centos', '>= 6'

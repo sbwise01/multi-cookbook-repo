@@ -1,6 +1,17 @@
 ---
 driver:
-  name: vagrant
+  name: ec2
+  region: us-east-1
+  subnet_id: <%= ENV['KITCHEN_TEST_SUBNET_ID'] %>
+  require_chef_omnibus: true
+  instance_type: t3.small
+  associate_public_ip: true
+  block_device_mappings:
+  - device_name: /dev/sda1
+    ebs:
+      volume_size: 8
+      volume_type: gp2
+      delete_on_termination: true
 
 provisioner:
   name: chef_zero

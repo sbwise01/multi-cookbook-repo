@@ -1,0 +1,53 @@
+---
+driver:
+  name: ec2
+  region: us-east-1
+  subnet_id: <%= ENV['KITCHEN_TEST_SUBNET_ID'] %>
+  require_chef_omnibus: true
+  instance_type: t3.small
+  associate_public_ip: true
+  block_device_mappings:
+  - device_name: /dev/sda1
+    ebs:
+      volume_size: 8
+      volume_type: gp2
+      delete_on_termination: true
+
+provisioner:
+  name: chef_zero
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: true
+  product_name: chef
+  product_version: 14.12.9
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: centos-6
+  - name: centos-7
+  - name: ubuntu-16.04
+  - name: ubuntu-18.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[rblx_vault]
+    attributes:
+      hashicorp-vault:
+        config:
+          ui: true
+          disable_performance_standby: true
+
+  - name: seal-options
+    run_list:
+      - recipe[rblx_vault]
+    attributes:
+      hashicorp-vault:
+        config:
+          seal_type: awskms
+          seal_options:
+            region: us-west-2
+            kms_key_id: my-kms-id

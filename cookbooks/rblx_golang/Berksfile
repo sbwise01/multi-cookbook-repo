@@ -6,7 +6,7 @@ metadata
 
 # All of the cookbooks below are maintained by Chef
 
-cookbook 'tar'
+#cookbook 'tar'
 
 group :integration do
   cookbook 'apt'
