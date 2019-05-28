@@ -1,0 +1,92 @@
+version: 2.0
+
+jobs:
+  checkout_code:
+    docker:
+      - image: circleci/ruby:2.4
+    working_directory: ~/circleci-demo-workflows
+    steps:
+      - checkout
+      - save_cache:
+        key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+        paths:
+          - ~/circleci-workflows
+
+ consul_build:
+   docker:
+     - image: circleci/ruby:2.4
+   steps:
+     - restore_cache:
+       key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+        name: Get Dependencies
+        command: |
+          cd cookbooks/rblx_consul
+          bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
+     - run:
+         name: Run Kitchen Tests
+         command: |
+           bundle exec rake integration:ec2[default-ubuntu-1604]
+
+ golang_build:
+   docker:
+     - image: circleci/ruby:2.4
+   steps:
+     - restore_cache:
+       key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+        name: Get Dependencies
+        command: |
+          cd cookbooks/rblx_golang
+          bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
+     - run:
+         name: Run Kitchen Tests
+         command: |
+           bundle exec rake integration:ec2[default-ubuntu-1604]
+
+ vault_build:
+   docker:
+     - image: circleci/ruby:2.4
+   steps:
+     - restore_cache:
+       key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+        name: Get Dependencies
+        command: |
+          cd cookbooks/rblx_vault
+          bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
+     - run:
+         name: Run Kitchen Tests
+         command: |
+           bundle exec rake integration:ec2[default-ubuntu-1604]
+
+ finalize:
+   docker:
+     - image: circleci/ruby:2.4
+   steps:
+     - restore_cache:
+       key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+        name: Finished
+        command: |
+          echo "All done!"
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - checkout_code
+      - consul_build:
+          requires:
+            - checkout_code
+      - golang_build:
+          requires:
+            - checkout_code
+      - vault_build:
+          requires:
+            - checkout_code
+      - finalize:
+          requires:
+            - consul_build
+            - golang_build
+            - vault_build
