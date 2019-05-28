@@ -69,22 +69,22 @@ jobs:
         name: Finished
         command: |
           echo "All done!"
-workflows:
-  version: 2
-  tests:
-    jobs:
-      - checkout_code
-      - consul_test:
-        requires:
-          - checkout_code
-      - golang_test:
-        requires:
-          - checkout_code
-      - vault_test:
-        requires:
-          - checkout_code
-      - finalize:
-        requires:
-          - consul_test
-          - golang_test
-          - vault_test
+#workflows:
+#  version: 2
+#  tests:
+#    jobs:
+#      - checkout_code
+#      - consul_test:
+#        requires:
+#          - checkout_code
+#      - golang_test:
+#        requires:
+#          - checkout_code
+#      - vault_test:
+#        requires:
+#          - checkout_code
+#      - finalize:
+#        requires:
+#          - consul_test
+#          - golang_test
+#          - vault_test
