@@ -61,6 +61,7 @@ jobs:
   finalize:
     docker:
       - image: circleci/ruby:2.4
+    working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
         key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
