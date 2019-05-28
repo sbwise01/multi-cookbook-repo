@@ -1,4 +1,4 @@
-version: 2.0
+version: 2
 jobs:
   checkout_code:
     docker:
@@ -10,7 +10,7 @@ jobs:
         key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
         paths:
           - ~/circleci-workflows
-  consul_build:
+  consul_test:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
@@ -26,7 +26,7 @@ jobs:
         name: Run Kitchen Tests
         command: |
           bundle exec rake integration:ec2[default-ubuntu-1604]
-  golang_build:
+  golang_test:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
@@ -42,7 +42,7 @@ jobs:
         name: Run Kitchen Tests
         command: |
           bundle exec rake integration:ec2[default-ubuntu-1604]
-  vault_build:
+  vault_test:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
@@ -70,20 +70,20 @@ jobs:
           echo "All done!"
 workflows:
   version: 2
-  build-and-deploy:
+  tests:
     jobs:
       - checkout_code
-      - consul_build:
+      - consul_test:
         requires:
           - checkout_code
-      - golang_build:
+      - golang_test:
         requires:
           - checkout_code
-      - vault_build:
+      - vault_test:
         requires:
           - checkout_code
       - finalize:
         requires:
-          - consul_build
-          - golang_build
-          - vault_build
+          - consul_test
+          - golang_test
+          - vault_test
