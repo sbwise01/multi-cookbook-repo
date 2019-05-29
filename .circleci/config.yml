@@ -22,7 +22,7 @@ jobs:
           command: |
             cd cookbooks/rblx_consul
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
-            bundle exec rake integration:ec2[default-ubuntu-1604]
+            bundle exec rake integration:ec2[default-]
   golang_test:
     docker:
       - image: circleci/ruby:2.4
@@ -35,7 +35,7 @@ jobs:
           command: |
             cd cookbooks/rblx_golang
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
-            bundle exec rake integration:ec2[default-ubuntu-1604]
+            bundle exec rake integration:ec2[default-]
   vault_test:
     docker:
       - image: circleci/ruby:2.4
@@ -48,7 +48,7 @@ jobs:
           command: |
             cd cookbooks/rblx_vault
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
-            bundle exec rake integration:ec2[default-ubuntu-1604] 
+            bundle exec rake integration:ec2[default-]
   finalize:
     docker:
       - image: circleci/ruby:2.4
