@@ -48,7 +48,7 @@ jobs:
           command: |
             cd cookbooks/rblx_vault
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
-            bundle exec rake integration:ec2[default-]
+            bundle exec rake integration:ec2[.]
   finalize:
     docker:
       - image: circleci/ruby:2.4
