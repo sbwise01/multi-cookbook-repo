@@ -1,3 +1,6 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
 source 'https://rubygems.org'
 
 gem 'rake'
@@ -5,25 +8,8 @@ gem 'berkshelf', '~> 7.0.2'
 gem 'kitchen-inspec', '~> 0.23.1'
 gem 'inspec', '~> 2.1.72'
 
-group :lint do
-  gem 'cookstyle'
-  gem 'foodcritic'
-  gem 'rubocop'
-end
-
-group :test, :integration, :unit do
-  gem 'chef-dk'
+group :integration do
   gem 'test-kitchen', '~> 1.21.2'
-end
-
-group :development do
-  gem 'awesome_print'
-  gem 'github_changelog_generator'
-  gem 'stove'
-end
-
-group :doc do
-  gem 'yard'
 end
 
 group :vagrant do
