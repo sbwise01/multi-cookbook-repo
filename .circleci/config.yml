@@ -36,6 +36,19 @@ jobs:
             cd cookbooks/rblx_golang
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
             bundle exec rake integration:ec2[default-]
+  nomad_test:
+    docker:
+      - image: circleci/ruby:2.4
+    working_directory: ~/circleci-workflows
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Get Dependencies
+          command: |
+            cd cookbooks/rblx_nomad
+            bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3 --without=vagrant
+            bundle exec rake integration:ec2[default-]
   vault_test:
     docker:
       - image: circleci/ruby:2.4
@@ -71,6 +84,9 @@ workflows:
       - golang_test:
           requires:
             - checkout_code
+      - nomad_test:
+          requires:
+            - checkout_code
       - vault_test:
           requires:
             - checkout_code
@@ -78,4 +94,5 @@ workflows:
           requires:
             - consul_test
             - golang_test
+            - nomad_test
             - vault_test
