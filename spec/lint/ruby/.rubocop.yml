@@ -1,0 +1,126 @@
+# Rules that are disabled
+
+Encoding:
+  Enabled: false
+
+NumericLiterals:
+  Enabled: false
+
+MultilineTernaryOperator:
+  Enabled: false
+
+ModuleLength:
+  Enabled: false
+
+MethodLength:
+  Enabled: false
+
+ClassLength:
+  Enabled: false
+
+CyclomaticComplexity:
+  Enabled: false
+
+Next:
+  Enabled: false
+
+GuardClause:
+  Enabled: false
+
+AbcSize:
+  Enabled: false
+
+IfUnlessModifier:
+  Enabled: false
+
+PerlBackrefs:
+  Enabled: false
+
+BlockNesting:
+  Enabled: false
+
+BracesAroundHashParameters:
+  Enabled: false
+
+WordArray:
+  Enabled: false
+
+RedundantReturn:
+  Enabled: false
+
+RedundantSelf:
+  Enabled: false
+
+CommentAnnotation:
+  Enabled: false
+
+AccessorMethodName:
+  Enabled: false
+
+LineEndConcatenation:
+  Enabled: false
+
+PercentLiteralDelimiters:
+  Enabled: false
+
+DeprecatedClassMethods:
+  Enabled: false
+
+FileName:
+  Enabled: false
+
+PerceivedComplexity:
+  Enabled: false
+
+MultilineOperationIndentation:
+  Enabled: false
+
+Performance/RedundantMatch:
+  Enabled: false
+
+Style/MutableConstant:
+  Enabled: false
+
+Performance/RedundantMerge:
+  Enabled: false
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Lint/UnneededCopDisableDirective:
+  Enabled: false
+
+# Rules that are modified
+
+Metrics/LineLength:
+  Max: 80
+
+Layout/DotPosition:
+  EnforcedStyle: trailing
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19_no_mixed_keys
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: no_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: no_comma
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: no_comma
+
+Layout/IndentFirstArrayElement:
+  EnforcedStyle: consistent
+
+Style/SignalException:
+  EnforcedStyle: semantic
+
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining

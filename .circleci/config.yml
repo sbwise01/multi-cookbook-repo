@@ -10,10 +10,46 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/circleci-workflows
+  rubocop_linting_test:
+    docker:
+      - image: circleci/ruby:2.4
+    working_directory: ~/circleci-workflows
+    branches:
+      only:
+        - master
+        - /feature\/.*/
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Run Rubocop linting tests
+          command: |
+            bundle install
+            rspec 'spec/lint/ruby/run_rubocop.rb'
+  foodcritic_linting_test:
+    docker:
+      - image: circleci/ruby:2.4
+    working_directory: ~/circleci-workflows
+    branches:
+      only:
+        - master
+        - /feature\/.*/
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Run Foodcritic linting tests
+          command: |
+            bundle install
+            rspec 'spec/lint/chef/run_foodcritic.rb'
   consul_test:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
+    branches:
+      only:
+        - master
+        - /feature\/.*/
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -27,6 +63,10 @@ jobs:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
+    branches:
+      only:
+        - master
+        - /feature\/.*/
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -40,6 +80,10 @@ jobs:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
+    branches:
+      only:
+        - master
+        - /feature\/.*/
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -53,6 +97,10 @@ jobs:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
+    branches:
+      only:
+        - master
+        - /feature\/.*/
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -78,18 +126,28 @@ workflows:
   tests:
     jobs:
       - checkout_code
+      - rubocop_linting_test:
+          requires:
+            - checkout_code
+      - foodcritic_linting_test:
+          requires:
+            - checkout_code
       - consul_test:
           requires:
-            - checkout_code
+            - rubocop_linting_test
+            - foodcritic_linting_test
       - golang_test:
           requires:
-            - checkout_code
+            - rubocop_linting_test
+            - foodcritic_linting_test
       - nomad_test:
           requires:
-            - checkout_code
+            - rubocop_linting_test
+            - foodcritic_linting_test
       - vault_test:
           requires:
-            - checkout_code
+            - rubocop_linting_test
+            - foodcritic_linting_test
       - finalize:
           requires:
             - consul_test
