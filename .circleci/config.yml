@@ -99,35 +99,61 @@ jobs:
             echo "All done with Kitchen Testing!"
 workflows:
   version: 2
-  branches:
-    only:
-      - master
-      - /feature\/.*/
   tests:
     jobs:
       - checkout_code
       - rubocop_linting_test:
           requires:
             - checkout_code
+          filters:
+            branches:
+              only:
+                - master
+                - /feature\/.*/
       - foodcritic_linting_test:
           requires:
             - checkout_code
+          filters:
+            branches:
+              only:
+                - master
+                - /feature\/.*/
       - consul_test:
           requires:
             - rubocop_linting_test
             - foodcritic_linting_test
+          filters:
+            branches:
+              only:
+                - master
+                - /feature\/.*/
       - golang_test:
           requires:
             - rubocop_linting_test
             - foodcritic_linting_test
+          filters:
+            branches:
+              only:
+                - master
+                - /feature\/.*/
       - nomad_test:
           requires:
             - rubocop_linting_test
             - foodcritic_linting_test
+          filters:
+            branches:
+              only:
+                - master
+                - /feature\/.*/
       - vault_test:
           requires:
             - rubocop_linting_test
             - foodcritic_linting_test
+          filters:
+            branches:
+              only:
+                - master
+                - /feature\/.*/
       - finalize:
           requires:
             - consul_test
