@@ -14,10 +14,6 @@ jobs:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
-    branches:
-      only:
-        - master
-        - /feature\/.*/
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -30,10 +26,6 @@ jobs:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
-    branches:
-      only:
-        - master
-        - /feature\/.*/
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -46,10 +38,6 @@ jobs:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
-    branches:
-      only:
-        - master
-        - /feature\/.*/
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -63,10 +51,6 @@ jobs:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
-    branches:
-      only:
-        - master
-        - /feature\/.*/
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -80,10 +64,6 @@ jobs:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
-    branches:
-      only:
-        - master
-        - /feature\/.*/
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -97,10 +77,6 @@ jobs:
     docker:
       - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
-    branches:
-      only:
-        - master
-        - /feature\/.*/
     steps:
       - restore_cache:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
@@ -123,6 +99,10 @@ jobs:
             echo "All done with Kitchen Testing!"
 workflows:
   version: 2
+  branches:
+    only:
+      - master
+      - /feature\/.*/
   tests:
     jobs:
       - checkout_code
