@@ -4,7 +4,7 @@ driver:
   region: us-east-1
   subnet_id: <%= ENV['KITCHEN_TEST_SUBNET_ID'] %>
   require_chef_omnibus: true
-  instance_type: t2.small
+  instance_type: c4.large
   associate_public_ip: true
   block_device_mappings:
   - device_name: /dev/sda1

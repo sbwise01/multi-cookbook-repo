@@ -96,6 +96,9 @@ Style/Documentation:
 Lint/UnneededCopDisableDirective:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 # Rules that are modified
 
 Metrics/LineLength:

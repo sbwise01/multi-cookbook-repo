@@ -1,0 +1,165 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+  chef_license: accept
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: true
+
+verifier:
+  name: inspec
+  chef_license: accept
+
+platforms:
+  - name: ubuntu-18.04
+  - name: ubuntu-16.04
+  - name: centos-7
+
+suites:
+  - name: default
+    run_list:
+      - recipe[rblx_elasticsearch::default]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
+      rblx_elasticsearch:
+        restart_on_update: true
+        version: 7.1.1
+        config:
+          xpack:
+            security:
+              enabled: false
+        keystore:
+          bootstrap:
+            password: whatev
+        # config:
+          # cluster:
+          #   name: my-cluster
+          #   initial_master_nodes: [node-1, node-2]
+          # node:
+          #   name: node-1
+          #   attr:
+          #     rack: 1
+          # path:
+          #   data: /var/lib/elasticsearch
+          #   logs: /var/log/elasticsearch
+          # bootstrap:
+          #   memory_lock: true
+          # network:
+          #   host: 192.168.0.1
+          # http:
+          #   port: 9200
+          # discovery:
+          #   seed_hosts: [host1, host2]
+          # gateway:
+          #   recover_after_nodes: 3
+          # action:
+          #   destructive_requires_name: true
+  - name: seedhosts
+    run_list:
+      - recipe[rblx_elasticsearch::default]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
+      rblx_elasticsearch:
+        restart_on_update: true
+        config:
+          discovery:
+            seed_providers: file
+        seed_providers:
+          variables:
+            hosts: ["192.168.1.1", "192.168.2.1", "192.168.863.684"]
+  - name: es6
+    run_list:
+      - recipe[rblx_elasticsearch::default]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
+      rblx_elasticsearch:
+        version: 6.7.2
+        restart_on_update: true
+        conifg:
+          cluster:
+            name: my-application
+          node:
+            name: node-1
+            attr:
+              rack: r1
+          path:
+            data: /var/lib/elasticsearch
+            logs: /var/log/elasticsearch
+          bootstrap:
+            memory_lock: true
+          network:
+            host: 192.168.0.1
+          http:
+            port: 9200
+          discovery:
+            zen:
+              ping:
+                unicast:
+                  hosts: [host1, host2]
+          gateway:
+            recover_after_nodes: 3
+          action:
+            destructive_requires_name: true
+  - name: es5
+    run_list:
+      - recipe[rblx_elasticsearch::default]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
+      rblx_elasticsearch:
+        version: 5.6.16
+        restart_on_update: true
+        conifg:
+          cluster:
+            name: my-application
+          node:
+            name: node-1
+            attr:
+              rack: r1
+          path:
+            data: /var/lib/elasticsearch
+            logs: /var/log/elasticsearch
+          bootstrap:
+            memory_lock: true
+          network:
+            host: 192.168.0.1
+          http:
+            port: 9200
+          discovery:
+            zen:
+              minimum_master_nodes: 3
+              ping:
+                unicast:
+                  hosts: [host1, host2]
+          gateway:
+            recover_after_nodes: 3
+          action:
+            destructive_requires_name: true
+  # - license:
+  #   run_list:
+  #     - recipe[rblx_elasticsearch::default]
+  #   verifier:
+  #     inspec_tests:
+  #       - test/integration/default
+  #   attributes:
+  #     rblx_elasticsearch:
+  #       restart_on_update: true
+  #       license: "<your-license>"
+  #       config:
+  #         xpack:
+  #           security:
+  #             transport:
+  #               ssl:
+  #                 enabled: true
+

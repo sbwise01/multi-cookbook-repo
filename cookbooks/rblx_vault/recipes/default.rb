@@ -23,9 +23,7 @@ else
 end
 
 config = vault_config node['hashicorp-vault']['service_name'] do |r|
-  if node['hashicorp-vault']['config']
-    node['hashicorp-vault']['config'].each_pair { |k, v| r.send(k, v) }
-  end
+  node['hashicorp-vault']['config']&.each_pair { |k, v| r.send(k, v) }
 end
 
 directory node['hashicorp-vault']['config_path'] do

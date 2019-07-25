@@ -1,0 +1,137 @@
+# ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please consult the documentation for further information on configuration options:
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+<% if @config['cluster']
+  res = parse_values('cluster', @config['cluster'])
+  res.each do |k, v|%>
+<%= k -%>: <%= v %>
+  <% end %>
+<% end %>
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+<% if @config['node']
+  res = parse_values('node', @config['node'])
+  res.each do |k, v|%>
+<%= k -%>: <%= v %>
+  <% end %>
+<% end %>
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+<% if @config['path']
+  res = parse_values('path', @config['path'])
+  res.each do |k, v|%>
+<%= k -%>: <%= v %>
+  <% end %>
+<% end %>
+<%# If the configuration does not include the logging and data directories, set them to their defaults so ES will start %>
+<% unless @config['path'] && @config['path'].key?('logs') -%>
+path.logs: /var/log/elasticsearch
+<% end -%>
+<% unless @config['path'] && @config['path'].key?('data') -%>
+path.data: /var/lib/elasticsearch
+<% end -%>
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+<% if @config['bootstrap']
+  res = parse_values('bootstrap', @config['bootstrap'])
+  res.each do |k, v|%>
+<%= k -%>: <%= v %>
+  <% end %>
+<% end %>
+#
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# Set the bind address to a specific IP (IPv4 or IPv6):
+#
+<% if @config['network']
+  res = parse_values('network', @config['network'])
+  res.each do |k, v|%>
+<%= k -%>: <%= v %>
+  <% end %>
+<% end %>
+#
+# Set a custom port for HTTP:
+#
+<% if @config['http']
+  res = parse_values('http', @config['http'])
+  res.each do |k, v|%>
+<%= k -%>: <%= v %>
+  <% end %>
+<% end %>
+#
+# For more information, consult the network module documentation.
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when this node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#
+<% if @config['discovery']
+  res = parse_values('discovery', @config['discovery'])
+  res.each do |k, v|%>
+<%= k -%>: <%= v %>
+  <% end %>
+<% end %>
+#
+# For more information, consult the discovery and cluster formation module documentation.
+#
+# ---------------------------------- Gateway -----------------------------------
+#
+# Block initial recovery after a full cluster restart until N nodes are started:
+#
+<% if @config['gateway']
+  res = parse_values('gateway', @config['gateway'])
+  res.each do |k, v|%>
+<%= k -%>: <%= v %>
+  <% end %>
+<% end %>
+#
+# For more information, consult the gateway module documentation.
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Require explicit names when deleting indices:
+#
+<% if @config['action']
+  res = parse_values('action', @config['action'])
+  res.each do |k, v|%>
+<%= k -%>: <%= v %>
+  <% end %>
+<% end %>
+
+<%# Get any stragglers %>
+<% @config.delete_if { |k, v|  %w(cluster node path bootstrap network http discovery gateway action).include? k }
+@config.each do |key, val|
+  res = parse_values(key, val)
+  res.each do |k, v|%>
+<%= k -%>: <%= v %>
+  <% end %>
+<% end %>

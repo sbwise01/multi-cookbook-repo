@@ -1,0 +1,40 @@
+driver:
+  name: vagrant
+  provider: virtualbox
+
+provisioner:
+  name: chef_zero
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: centos-7
+    driver:
+      customize:
+        cpus: 2
+        memory: 2048
+  - name: ubuntu-18.04
+    driver:
+      customize:
+        cpus: 2
+        memory: 2048
+
+suites:
+  - name: default
+    run_list:
+      - recipe[rblx_iptables]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
+      rblx_iptables:
+        filter:
+          SSH:
+            protocol: tcp
+            dport: 22
+            jump: accept
+          HTTP:
+            protocol: tcp
+            dport: 80
+            jump: accept

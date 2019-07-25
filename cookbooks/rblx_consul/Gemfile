@@ -3,10 +3,10 @@
 
 source 'https://rubygems.org'
 
-gem 'rake'
 gem 'berkshelf', '~> 7.0.2'
-gem 'kitchen-inspec', '~> 0.23.1'
 gem 'inspec', '~> 2.1.72'
+gem 'kitchen-inspec', '~> 0.23.1'
+gem 'rake'
 
 group :integration do
   gem 'test-kitchen', '~> 1.21.2'

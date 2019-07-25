@@ -4,7 +4,6 @@
 chef_guid
 .zero-knife.rb
 Policyfile.lock.json
-Berksfile.lock
 
 # Ruby
 .rake_test_cache
