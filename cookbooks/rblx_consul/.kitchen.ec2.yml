@@ -31,7 +31,7 @@ platforms:
     driver:
       image_search:
         owner-id: "099720109477"
-        name: ubuntu/images/hvm-ssd/ubuntu-xenial-16.04*
+        name: ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server*
   - name: centos-6
   - name: centos-7
 
