@@ -57,3 +57,12 @@ If you want to lint your code locally before pushing your code up to github do t
 
 Note:
 * If you are using a Mac, make sure your ruby environment is setup correctly, see the documentation in the docs folder.
+
+# Secrets in Circle CI
+## Chef Private Key
+* Copy key to matt
+```
+cat matt.txt | base64 -w0
+```
+* copy that to an environment variable in circleci
+* 

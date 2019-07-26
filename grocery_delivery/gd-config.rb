@@ -17,14 +17,19 @@
 stdout          true
 master_path     "/home/circleci/"
 reponame        "circleci-workflows"
-cookbook_paths  ["rblx_consul", "rblx_nomad", "rblx_vault"]
-role_path       'roles'
+cookbook_paths  [
+    "/home/circleci/circleci-workflows/cookbooks/rblx_consul",
+    "/home/circleci/circleci-workflows/cookbooks/rblx_nomad",
+    "/home/circleci/circleci-workflows/cookbooks/rblx_vault"
+]
+role_path       '/home/circleci/circleci-workflows/roles'
 databag_path    'data_bags'
 rev_checkpoint  'gd_revision'
 knife_bin        "/usr/local/bundle/bin/knife"
-knife_config     "/home/circleci/circleci-workflows/grocery_delivery/knife.rb"
+knife_config     "/home/circleci/circleci-workflows/knife/knife.rb"
 vcs_type        'git'
 vcs_path         "/usr/bin/git"
+repo_url         "https://github.rbx.com/Roblox/orchestration-chef"
 berks           false
 berks_bin       "/usr/local/bundle/bin/berks"
 

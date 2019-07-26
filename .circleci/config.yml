@@ -2,7 +2,7 @@ version: 2
 jobs:
   checkout_code:
     docker:
-      - image: circleci/ruby:2.6
+      - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
     steps:
       - checkout
@@ -12,7 +12,7 @@ jobs:
             - ~/circleci-workflows
   rubocop_linting_test:
     docker:
-      - image: circleci/ruby:2.6
+      - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
@@ -24,7 +24,7 @@ jobs:
             rspec 'spec/lint/ruby/run_rubocop.rb'
   foodcritic_linting_test:
     docker:
-      - image: circleci/ruby:2.6
+      - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
@@ -35,7 +35,6 @@ jobs:
             bundle install
             rspec 'spec/lint/chef/run_foodcritic.rb'
   testing_common: &testing_common
-    #parallelism: 4
     docker:
       - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
@@ -58,6 +57,11 @@ jobs:
     environment:
       FILTER: "default-"
       COOKBOOK: "rblx_golang"
+  es7_test:
+    <<: *testing_common
+    environment:
+      FILTER: "default-"
+      COOKBOOK: "rblx_elasticsearch"
   nomad_test:
     <<: *testing_common
     environment:
@@ -70,7 +74,7 @@ jobs:
       COOKBOOK: "rblx_vault"
   finalize_testing:
     docker:
-      - image: circleci/ruby:2.6
+      - image: circleci/ruby:2.4
     working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
@@ -104,7 +108,6 @@ jobs:
             chown circleci:circleci /home/circleci/chef_private
             grocery-delivery -l /var/lock/grocery_delivery.lock --pidfile /var/tmp/gd.pid --config-file ~/circleci-workflows/grocery_delivery/gd-config.rb $GDEXTRA
             echo "Removing PassKey"
-            rm /home/circleci/chef_private
   grocery_delivery_dry:
     <<: *grocery_delivery_common
     environment:
@@ -113,6 +116,42 @@ jobs:
     <<: *grocery_delivery_common
     environment:
       GDEXTRA: -v
+  knife_delivery_common: &knife_delivery_common
+    docker:
+      - image: circleci/ruby:2.6
+    working_directory: ~/circleci-workflows
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Knife Dependencies
+          command: |
+            gem install bundle
+            wget https://packages.chef.io/files/stable/chefdk/3.2.30/ubuntu/18.04/chefdk_3.2.30-1_amd64.deb -O chef.deb
+            sudo dpkg -i /home/circleci/circleci-workflows/chef.deb
+      - run:
+          name: Private Key Setup
+          command: |
+            echo $CHEF_PRIVATE_KEY | base64 --decode >> /home/circleci/chef_private
+            chmod 400 /home/circleci/chef_private
+            chown circleci:circleci /home/circleci/chef_private
+      - run:
+          name: Run Knife Delivery
+          command: |
+            echo "KNIFE_EXTRAS: $KNIFE_EXTRAS"
+            knife upload -c /home/circleci/circleci-workflows/knife/knife.rb $KNIFE_EXTRAS --chef-repo-path /home/circleci/circleci-workflows .
+      - run:
+          name: Private Key Cleanup
+          command: |
+            rm -f /home/circleci/chef_private
+  knife_delivery_dry:
+    <<: *knife_delivery_common
+    environment:
+      KNIFE_EXTRAS: -V -V -n
+  knife_delivery:
+    <<: *knife_delivery_common
+    environment:
+      KNIFE_EXTRAS: -V  
 
 workflows:
   version: 2
@@ -125,37 +164,42 @@ workflows:
       - foodcritic_linting_test:
           requires:
             - checkout_code
+      #- es7_test:
+      #    requires:
+      #      - rubocop_linting_test
+      #      - foodcritic_linting_test   
       - consul_test:
           requires:
             - rubocop_linting_test
             - foodcritic_linting_test
-      # # # - golang_test:
-      # # #     requires:
-      # # #       - rubocop_linting_test
-      # # #       - foodcritic_linting_test
-      # # - nomad_test:
-      # #     requires:
-      # #       - rubocop_linting_test
-      # #       - foodcritic_linting_test
-      # # - vault_test:
-      # #     requires:
-      # #       - rubocop_linting_test
-      # #       - foodcritic_linting_test
-      # - finalize_testing:
-      #      requires:
-      #         - checkout_code
-      #         # - consul_test
-      #         # #- golang_test
-      #         # - nomad_test
-      #         # - vault_test
-      # - grocery_delivery_dry:
+      # - golang_test:
+      #     requires:
+      #       - rubocop_linting_test
+      #       - foodcritic_linting_test
+      #- nomad_test:
+      #    requires:
+      #      - rubocop_linting_test
+      #      - foodcritic_linting_test
+      #- vault_test:
+      #    requires:
+      #      - rubocop_linting_test
+      #      - foodcritic_linting_test
+      #- finalize_testing:
+      #     requires:
+      #        - checkout_code
+      #        - es7_test
+      #        - consul_test
+      #        #- golang_test
+      #        - nomad_test
+      #        - vault_test
+      #- knife_delivery_dry:
+      #   requires:
+      #     - finalize_testing
+      #- knife_delivery:
       #    requires:
       #      - finalize_testing
-      # - grocery_delivery:
-      #     requires:
-      #       - finalize_testing
-      #       - grocery_delivery_dry
-      #     filters:
-      #       branches:
-      #         only:
-      #           - master
+      #      - knife_delivery_dry
+      #    filters:
+      #      branches:
+      #        only:
+      #          - master
