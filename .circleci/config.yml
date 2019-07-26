@@ -35,7 +35,7 @@ jobs:
             bundle install
             rspec 'spec/lint/chef/run_foodcritic.rb'
   testing_common: &testing_common
-    parallelism: 4
+    #parallelism: 4
     docker:
       - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
