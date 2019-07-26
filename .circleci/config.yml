@@ -2,7 +2,7 @@ version: 2
 jobs:
   checkout_code:
     docker:
-      - image: circleci/ruby:2.4
+      - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
     steps:
       - checkout
@@ -12,7 +12,7 @@ jobs:
             - ~/circleci-workflows
   rubocop_linting_test:
     docker:
-      - image: circleci/ruby:2.4
+      - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
@@ -24,7 +24,7 @@ jobs:
             rspec 'spec/lint/ruby/run_rubocop.rb'
   foodcritic_linting_test:
     docker:
-      - image: circleci/ruby:2.4
+      - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
@@ -74,7 +74,7 @@ jobs:
       COOKBOOK: "rblx_vault"
   finalize_testing:
     docker:
-      - image: circleci/ruby:2.4
+      - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
