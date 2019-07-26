@@ -17,5 +17,5 @@ group :vagrant do
 end
 
 group :ec2 do
-  gem 'kitchen-ec2'
+  gem 'kitchen-ec2', '~> 2.5.0'
 end
