@@ -2,7 +2,7 @@ version: 2
 jobs:
   checkout_code:
     docker:
-      - image: circleci/ruby:2.4
+      - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
     steps:
       - checkout
@@ -12,7 +12,7 @@ jobs:
             - ~/circleci-workflows
   rubocop_linting_test:
     docker:
-      - image: circleci/ruby:2.4
+      - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
@@ -24,7 +24,7 @@ jobs:
             rspec 'spec/lint/ruby/run_rubocop.rb'
   foodcritic_linting_test:
     docker:
-      - image: circleci/ruby:2.4
+      - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
@@ -37,7 +37,7 @@ jobs:
   testing_common: &testing_common
     parallelism: 4
     docker:
-      - image: circleci/ruby:2.4
+      - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
@@ -70,7 +70,7 @@ jobs:
       COOKBOOK: "rblx_vault"
   finalize_testing:
     docker:
-      - image: circleci/ruby:2.4
+      - image: circleci/ruby:2.6
     working_directory: ~/circleci-workflows
     steps:
       - restore_cache:
@@ -125,10 +125,10 @@ workflows:
       - foodcritic_linting_test:
           requires:
             - checkout_code
-      # # - consul_test:
-      # #     requires:
-      # #       - rubocop_linting_test
-      # #       - foodcritic_linting_test
+      - consul_test:
+          requires:
+            - rubocop_linting_test
+            - foodcritic_linting_test
       # # # - golang_test:
       # # #     requires:
       # # #       - rubocop_linting_test
